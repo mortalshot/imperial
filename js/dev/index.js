@@ -36,6 +36,15 @@ const loadActiveSlideVideo = (sliderElement, activeIndex) => {
     });
   }
 };
+const syncHeroVideoPoster = (sliderElement) => {
+  const fallbackPoster = sliderElement.querySelector(".hero-slide__image")?.currentSrc || sliderElement.querySelector(".hero-slide__image")?.getAttribute("src") || "";
+  if (!fallbackPoster) return;
+  sliderElement.querySelectorAll(".hero-slide__video").forEach((video) => {
+    if (!video.getAttribute("poster")) {
+      video.setAttribute("poster", fallbackPoster);
+    }
+  });
+};
 const initHeroViewportObserver = ($slider, sliderElement, heroElement) => {
   if (!("IntersectionObserver" in window)) return;
   const observer = new IntersectionObserver(
@@ -63,6 +72,7 @@ const initHeroSlider = () => {
   if (!$ || !$.fn?.slick || !slider || !hero || !prevButton || !nextButton) return;
   const $slider = $(slider);
   if ($slider.hasClass("slick-initialized")) return;
+  syncHeroVideoPoster(slider);
   $slider.on("init", (_event, slick) => {
     pauseInactiveVideos(slider, slick.currentSlide);
     loadActiveSlideVideo(slider, slick.currentSlide);
@@ -95,3 +105,17 @@ window.addEventListener("load", () => {
   initHeroSlider();
 });
 window.addEventListener("resize", syncHeroHeaderOffset);
+const initCategoriesPrevBackgrounds = () => {
+  const section = document.querySelector(".s-categories-prev-color");
+  if (!section) return;
+  section.querySelectorAll("[data-bg]").forEach((card) => {
+    const background = card.getAttribute("data-bg");
+    if (!background) return;
+    card.style.backgroundImage = 'url("' + background + '")';
+  });
+};
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCategoriesPrevBackgrounds, { once: true });
+} else {
+  initCategoriesPrevBackgrounds();
+}
