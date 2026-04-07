@@ -1316,6 +1316,9 @@ video {
   }}@media (min-width: 22.5em) and (max-width: 62em) {
   .header .container {
     padding-inline: clamp( 0.75rem , 0.46518987341875rem  +  1.2658227848vw , 1.25rem );
+  }}@media (min-width: 47.99875em) {
+  .category-subnav {
+    padding-top: 0.625rem;
   }}@media (min-width: 48em) and (max-width: 62em) {
   .header__logo {
     max-width: clamp( 8.8125rem , -2.33035714285625rem  +  23.2142857143vw , 12.0625rem );
