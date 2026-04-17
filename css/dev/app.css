@@ -1372,6 +1372,14 @@ video {
   }
   .header.has-fixed-category-nav .category-nav__basket-slot {
     display: flex;
+  }
+  .category-subnav__item .category-subnav {
+    bottom: auto !important;
+    min-height: 100%;
+  }
+  .category-subnav__item > .category-subnav > .category-subnav__list {
+    height: auto;
+    min-height: 100%;
   }}@media (min-width: 62em) and (max-width: 90em) {
   .header .container {
     padding-inline: clamp( 1.25rem , -1.51785714285625rem  +  4.4642857143vw , 2.5rem );
