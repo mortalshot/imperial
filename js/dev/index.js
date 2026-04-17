@@ -71,9 +71,13 @@ const initHeroSlider = () => {
   const nextButton = hero?.querySelector(".hero__arrow--next");
   if (!$ || !$.fn?.slick || !slider || !hero || !prevButton || !nextButton) return;
   const $slider = $(slider);
-  if ($slider.hasClass("slick-initialized")) return;
+  if ($slider.hasClass("slick-initialized")) {
+    hero.classList.add("_hero-ready");
+    return;
+  }
   syncHeroVideoPoster(slider);
   $slider.on("init", (_event, slick) => {
+    hero.classList.add("_hero-ready");
     pauseInactiveVideos(slider, slick.currentSlide);
     loadActiveSlideVideo(slider, slick.currentSlide);
   });

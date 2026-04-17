@@ -4,11 +4,32 @@
   position: relative;
   padding: 0;
 }
+.hero:not(._hero-ready) .hero__slide:not(:first-child) {
+  display: none;
+}
+.hero:not(._hero-ready) .hero__controls {
+  opacity: 0;
+  visibility: hidden;
+}
 .hero__controls {
   display: flex;
   gap: 0.5rem;
   position: absolute;
 }
+.hero__controls {
+  transition: opacity 0.3s, visibility 0s 0.3s;
+}
+.hero._hero-ready .hero__controls {
+  transition: opacity 0.3s, visibility 0s;
+}
+.slick-slider {
+  opacity: 0;
+  transition: 0.3s ease opacity 0s;
+}
+.slick-slider.slick-initialized {
+  opacity: 1;
+}
+
 .hero-slide__media img,
 .hero-slide__media video {
   position: absolute;
