@@ -108,7 +108,7 @@ const initHeroSlider = () => {
   const hero = slider?.closest(".hero");
   const prevButton = hero?.querySelector(".hero__arrow--prev");
   const nextButton = hero?.querySelector(".hero__arrow--next");
-  if (!$ || !$.fn?.slick || !slider || !hero || !prevButton || !nextButton) return;
+  if (!$ || !$.fn?.slick || !slider || !hero) return;
   const $slider = $(slider);
   if ($slider.hasClass("slick-initialized")) {
     hero.classList.add("_hero-ready");
@@ -135,12 +135,16 @@ const initHeroSlider = () => {
     speed: 700,
     cssEase: "ease"
   });
-  prevButton.addEventListener("click", () => {
-    $slider.slick("slickPrev");
-  });
-  nextButton.addEventListener("click", () => {
-    $slider.slick("slickNext");
-  });
+  if (prevButton) {
+    prevButton.addEventListener("click", () => {
+      $slider.slick("slickPrev");
+    });
+  }
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      $slider.slick("slickNext");
+    });
+  }
   initHeroViewportObserver($slider, slider, hero);
 };
 window.addEventListener("load", () => {
