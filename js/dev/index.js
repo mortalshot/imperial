@@ -20,14 +20,27 @@ const pauseInactiveVideos = (sliderElement, activeIndex) => {
     video.pause();
   });
 };
+const loadVideoSources = (video) => {
+  let isSourceChanged = false;
+  video.querySelectorAll("source[data-src]").forEach((source2) => {
+    if (source2.getAttribute("src")) return;
+    source2.setAttribute("src", source2.dataset.src);
+    isSourceChanged = true;
+  });
+  const source = video.dataset.src;
+  if (source && !video.getAttribute("src")) {
+    video.setAttribute("src", source);
+    isSourceChanged = true;
+  }
+  return isSourceChanged;
+};
 const loadActiveSlideVideo = (sliderElement, activeIndex) => {
   const slides = sliderElement.querySelectorAll(".hero__slide");
   const activeSlide = slides[activeIndex];
   const video = activeSlide?.querySelector(".hero-slide__video");
   if (!video) return;
-  const source = video.dataset.src;
-  if (source && !video.getAttribute("src")) {
-    video.setAttribute("src", source);
+  const isSourceChanged = loadVideoSources(video);
+  if (isSourceChanged) {
     video.load();
   }
   const playPromise = video.play();
@@ -36,13 +49,39 @@ const loadActiveSlideVideo = (sliderElement, activeIndex) => {
     });
   }
 };
+const getHeroVideoPoster = (video, fallbackPoster = "") => {
+  const matchedSource = [...video.querySelectorAll("source[data-poster]")].find((source) => {
+    const media = source.getAttribute("media");
+    return !media || window.matchMedia(media).matches;
+  });
+  return matchedSource?.dataset.poster || fallbackPoster;
+};
 const syncHeroVideoPoster = (sliderElement) => {
   const fallbackPoster = sliderElement.querySelector(".hero-slide__image")?.currentSrc || sliderElement.querySelector(".hero-slide__image")?.getAttribute("src") || "";
-  if (!fallbackPoster) return;
   sliderElement.querySelectorAll(".hero-slide__video").forEach((video) => {
-    if (!video.getAttribute("poster")) {
-      video.setAttribute("poster", fallbackPoster);
+    const poster = getHeroVideoPoster(video, fallbackPoster);
+    if (!poster) return;
+    if (video.getAttribute("poster") === poster) return;
+    video.setAttribute("poster", poster);
+  });
+};
+const initHeroVideoPosterSync = (sliderElement) => {
+  syncHeroVideoPoster(sliderElement);
+  const mediaList = [
+    ...new Set(
+      [...sliderElement.querySelectorAll(".hero-slide__video source[media]")].map(
+        (source) => source.getAttribute("media")
+      )
+    )
+  ];
+  mediaList.forEach((media) => {
+    const mediaQuery = window.matchMedia(media);
+    const syncPoster = () => syncHeroVideoPoster(sliderElement);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", syncPoster);
+      return;
     }
+    mediaQuery.addListener(syncPoster);
   });
 };
 const initHeroViewportObserver = ($slider, sliderElement, heroElement) => {
@@ -75,7 +114,7 @@ const initHeroSlider = () => {
     hero.classList.add("_hero-ready");
     return;
   }
-  syncHeroVideoPoster(slider);
+  initHeroVideoPosterSync(slider);
   $slider.on("init", (_event, slick) => {
     hero.classList.add("_hero-ready");
     pauseInactiveVideos(slider, slick.currentSlide);
@@ -108,7 +147,9 @@ window.addEventListener("load", () => {
   syncHeroHeaderOffset();
   initHeroSlider();
 });
-window.addEventListener("resize", syncHeroHeaderOffset);
+window.addEventListener("resize", () => {
+  syncHeroHeaderOffset();
+});
 const initCategoriesPrevBackgrounds = () => {
   const section = document.querySelector(".s-categories-prev-color");
   if (!section) return;
