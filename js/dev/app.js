@@ -284,13 +284,11 @@ const initCategoryNavSticky = () => {
   let rafId = 0;
   let basketStart = 0;
   let stickyStart = 0;
-  let unfixTimeoutId = 0;
   let canUseSticky = true;
   const basketAnchor = document.createComment("header-basket-anchor");
   const basketPlaceholder = document.createElement("div");
   const basketParent = basket.parentNode;
   const basketSlot = document.createElement("div");
-  const unfixDuration = 300;
   basketPlaceholder.className = "header__basket-placeholder";
   basketPlaceholder.setAttribute("aria-hidden", "true");
   basketSlot.className = "category-nav__basket-slot";
@@ -302,7 +300,7 @@ const initCategoryNavSticky = () => {
   const setStickyStart = () => {
     const headerTop = header.getBoundingClientRect().top + window.scrollY;
     basketStart = headerTop + categoryNav.offsetTop + categoryNav.offsetHeight;
-    stickyStart = basketStart + 220;
+    stickyStart = basketStart + 320;
     const maxScrollableY = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
     canUseSticky = maxScrollableY > stickyStart;
   };
@@ -312,20 +310,20 @@ const initCategoryNavSticky = () => {
     basketParent.insertBefore(basket, basketAnchor.nextSibling);
   };
   const moveBasketToCategoryNav = () => {
+    if (basket.parentNode === basketSlot) return;
     const basketRect = basket.getBoundingClientRect();
     basketPlaceholder.style.width = `${basketRect.width}px`;
+    basketPlaceholder.style.minWidth = `${basketRect.width}px`;
     basketPlaceholder.style.height = `${basketRect.height}px`;
     if (basketPlaceholder.parentNode !== basketParent) {
       basketParent.insertBefore(basketPlaceholder, basketAnchor.nextSibling);
     }
-    if (basket.parentNode === basketSlot) return;
     basketSlot.append(basket);
   };
   const toggleStickyState = () => {
     rafId = 0;
     categoryNav.classList.remove("is-fixed");
     if (!canUseSticky) {
-      window.clearTimeout(unfixTimeoutId);
       categoryNav.classList.remove("is-sticky", "is-unfixing");
       header.classList.remove("has-fixed-category-nav");
       header.style.removeProperty("--category-nav-fixed-height");
@@ -340,7 +338,6 @@ const initCategoryNavSticky = () => {
       moveBasketToHeaderMain();
     }
     if (shouldFix) {
-      window.clearTimeout(unfixTimeoutId);
       categoryNav.classList.remove("is-unfixing");
       header.classList.add("has-fixed-category-nav");
       categoryNav.classList.add("is-sticky");
@@ -353,17 +350,14 @@ const initCategoryNavSticky = () => {
       header.style.removeProperty("--category-nav-fixed-height");
       return;
     }
-    categoryNav.classList.add("is-unfixing");
-    unfixTimeoutId = window.setTimeout(() => {
-      categoryNav.classList.remove("is-sticky", "is-unfixing");
-      header.classList.remove("has-fixed-category-nav");
-      header.style.removeProperty("--category-nav-fixed-height");
-      if (window.scrollY < basketStart) {
-        moveBasketToHeaderMain();
-        return;
-      }
-      moveBasketToCategoryNav();
-    }, unfixDuration);
+    categoryNav.classList.remove("is-sticky", "is-unfixing");
+    header.classList.remove("has-fixed-category-nav");
+    header.style.removeProperty("--category-nav-fixed-height");
+    if (window.scrollY < basketStart) {
+      moveBasketToHeaderMain();
+      return;
+    }
+    moveBasketToCategoryNav();
   };
   const requestStickyUpdate = () => {
     if (rafId) return;

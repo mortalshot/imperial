@@ -141,7 +141,7 @@ video {
   background-color: transparent;
 }
 .header.header--transparent .category-nav.is-sticky {
-  padding-block: 0.5rem;
+  padding-block: 0.5rem !important;
   background-color: #fff;
 }
 .header.header--transparent .category-nav.is-sticky .category-nav__title {
@@ -451,6 +451,12 @@ video {
   line-height: 1.4;
 }
 
+.header__basket-placeholder {
+  flex: 0 0 auto;
+  width: var(--basket-placeholder-width, auto);
+  min-width: var(--basket-placeholder-width, auto);
+}
+
 .search-toggle {
   display: none;
   align-items: center;
@@ -487,7 +493,6 @@ video {
   right: 0;
   z-index: 40;
   box-shadow: 0 0.625rem 1.5rem rgba(0, 0, 0, 0.12);
-  animation: categoryNavSlideUp 0.3s ease forwards;
 }
 .category-nav__head {
   display: flex;
