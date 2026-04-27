@@ -141,7 +141,6 @@ video {
   background-color: transparent;
 }
 .header.header--transparent .category-nav.is-sticky {
-  padding-block: 0.5rem !important;
   background-color: #fff;
 }
 .header.header--transparent .category-nav.is-sticky .category-nav__title {
@@ -478,6 +477,7 @@ video {
   background-color: #fff;
 }
 .category-nav.is-sticky {
+  padding-block: 0.5rem !important;
   position: fixed;
   top: 0;
   left: 0;

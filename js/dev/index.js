@@ -154,17 +154,3 @@ window.addEventListener("load", () => {
 window.addEventListener("resize", () => {
   syncHeroHeaderOffset();
 });
-const initCategoriesPrevBackgrounds = () => {
-  const section = document.querySelector(".s-categories-prev-color");
-  if (!section) return;
-  section.querySelectorAll("[data-bg]").forEach((card) => {
-    const background = card.getAttribute("data-bg");
-    if (!background) return;
-    card.style.backgroundImage = 'url("' + background + '")';
-  });
-};
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initCategoriesPrevBackgrounds, { once: true });
-} else {
-  initCategoriesPrevBackgrounds();
-}

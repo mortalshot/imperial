@@ -27,6 +27,20 @@
     fetch(link.href, fetchOpts);
   }
 })();
+const initCategoriesPrevBackgrounds = () => {
+  const section = document.querySelector(".s-categories-prev-color");
+  if (!section) return;
+  section.querySelectorAll("[data-bg]").forEach((card) => {
+    const background = card.getAttribute("data-bg");
+    if (!background) return;
+    card.style.backgroundImage = 'url("' + background + '")';
+  });
+};
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCategoriesPrevBackgrounds, { once: true });
+} else {
+  initCategoriesPrevBackgrounds();
+}
 const initTransparentHeader = () => {
   const header = document.querySelector(".header");
   const page = document.querySelector(".page");
@@ -338,11 +352,14 @@ const initCategoryNavSticky = () => {
       moveBasketToHeaderMain();
     }
     if (shouldFix) {
+      const isSticky = categoryNav.classList.contains("is-sticky");
       categoryNav.classList.remove("is-unfixing");
+      if (!isSticky) {
+        setCategoryNavHeight();
+      }
       header.classList.add("has-fixed-category-nav");
       categoryNav.classList.add("is-sticky");
       moveBasketToCategoryNav();
-      setCategoryNavHeight();
       return;
     }
     if (!categoryNav.classList.contains("is-sticky")) {
