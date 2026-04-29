@@ -110,6 +110,7 @@ const initHeroSlider = () => {
   const nextButton = hero?.querySelector(".hero__arrow--next");
   if (!$ || !$.fn?.slick || !slider || !hero) return;
   const $slider = $(slider);
+  const hasAutoplay = slider.classList.contains("_autoplay");
   if ($slider.hasClass("slick-initialized")) {
     hero.classList.add("_hero-ready");
     return;
@@ -130,6 +131,8 @@ const initHeroSlider = () => {
   $slider.slick({
     arrows: false,
     dots: false,
+    autoplay: hasAutoplay,
+    autoplaySpeed: 5e3,
     fade: true,
     infinite: true,
     speed: 700,

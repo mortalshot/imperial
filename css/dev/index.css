@@ -17,7 +17,11 @@
   position: absolute;
 }
 .hero__controls {
+  pointer-events: none;
   transition: opacity 0.3s, visibility 0s 0.3s;
+}
+.hero__controls > * {
+  pointer-events: auto;
 }
 .hero._hero-ready .hero__controls {
   transition: opacity 0.3s, visibility 0s;
@@ -51,6 +55,12 @@
   align-content: flex-end;
   row-gap: 0.5rem;
   color: #fff;
+}
+.hero-slide__content-inner a {
+  color: inherit;
+  text-decoration: underline from-font;
+  text-underline-offset: 0.1875rem;
+  transition: 0.3s ease text-decoration 0s;
 }
 .hero-slide__title {
   font-weight: 500;
@@ -147,6 +157,9 @@
     padding-inline: 2.5rem;
   }
 }@media (any-hover: hover) {
+  .hero-slide__content-inner a:hover {
+    text-decoration: underline transparent from-font;
+  }
   .slider-arrow {
     transition: 0.3s ease translate 0s;
   }
